@@ -3,16 +3,15 @@
 Preview any file on [Yazi](https://github.com/sxyazi/yazi) using [hexyl](https://github.com/sharkdp/hexyl). To install, use the `ya pack` cli utility:
 
 ```bash
-ya pack -a Reledia/hexyl
+ya pkg add Reledia/hexyl
 ```
 
 then include it in your `yazi.toml` to use:
 
 ```toml
-[plugin]
-append_previewers = [
-  { name = "*", run = "hexyl" },
-]
+[[plugin.prepend_previewers]]
+mime = "application/octet-stream"
+run = "hexyl"
 ```
 
 Make sure you have [hexyl](https://github.com/sharkdp/hexyl) installed, and that can be found in `PATH`.

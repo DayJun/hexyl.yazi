@@ -4,20 +4,20 @@ function M:peek(job)
   local child
   local l = job.file.cha.len
   if l == 0 then
+    -- 空文件：只传文件路径
     child = Command("hexyl")
-        :args({
-          tostring(job.file.url),
-        })
+        :arg(tostring(job.file.url))          -- 替换 :args({...})
         :stdout(Command.PIPED)
         :stderr(Command.PIPED)
         :spawn()
   else
+    -- 普通文件：带完整参数
     child = Command("hexyl")
-        :args({
-          "--border", "none",
-          "--terminal-width", tostring(job.area.w),
-          tostring(job.file.url),
-        })
+        :arg("--border")
+        :arg("none")
+        :arg("--terminal-width")
+        :arg(tostring(job.area.w))
+        :arg(tostring(job.file.url))
         :stdout(Command.PIPED)
         :stderr(Command.PIPED)
         :spawn()
@@ -53,7 +53,7 @@ function M:peek(job)
     })
   else
     lines = lines:gsub("\t", string.rep(" ", rt.preview.tab_size))
-    ya.preview_widgets(job, { ui.Text.parse(lines):area(job.area) })
+    ya.preview_widget(job, { ui.Text.parse(lines):area(job.area) })
   end
 end
 
@@ -67,7 +67,7 @@ function M:seek(job)
   local scroll_offset = job.units
 
   -- Emit a new peek event with the updated skip value.
-  ya.mgr_emit("peek", {
+  ya.emit("peek", {
     math.max(0, cx.active.preview.skip + scroll_offset),
     only_if = job.file.url,
   })
